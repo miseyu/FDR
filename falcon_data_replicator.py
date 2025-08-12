@@ -94,6 +94,7 @@ def handle_file(path, key, target_bkt, file_object=None, log_util: logging.Logge
     total_events_in_file = 0
     transform_time = 0
     upload_time = 0
+    log_util.info("FDR.target_bucket_name: %s", FDR.target_bucket_name)
     # If we've defined a target bucket
     if FDR.target_bucket_name:
         if not file_object:
