@@ -35,7 +35,7 @@ def upload_parquet_files_to_s3(fdr, s3_target, log_utl: Logger):
                 for filename in filenames:
                     upload_file_path = os.path.join(root, filename)
                     timestamp_str = filename.split('_')[-1].split('.')[0]
-
+                    log_utl.info("upload_file_path: %s", upload_file_path)
                     if not filename.endswith('parquet'):
                         continue
 
