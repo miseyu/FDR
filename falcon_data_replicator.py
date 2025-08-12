@@ -156,8 +156,10 @@ def download_message_files(msg, s3ta, s3or, log: logging.Logger):
     for s3_file in msg["files"]:
         # Retrieve the bucket path for this file
         s3_path = s3_file["path"]
+        log.info("s3_path: %s", s3_path)
         total_download_time_per_input_file = 0
         if not FDR.in_memory_transfer_only:
+            log.info("Downloading file to local file system")
             # Construct output path for this message's files
             msg_output_path = os.path.realpath(os.path.join(FDR.output_path, msg["pathPrefix"]))
             # Only write files to the specified output_path
@@ -187,7 +189,7 @@ def download_message_files(msg, s3ta, s3or, log: logging.Logger):
             # Handle S3 upload if configured
             result = handle_file(local_path, s3_path, s3ta, None, log)
         else:
-            log.debug("Downloading file to memory")
+            log.info("Downloading file to memory")
             start_download_time = time.time()
             s3t = boto3.resource(
                 "s3", region_name=FDR.region_name, aws_access_key_id=FDR.aws_key, aws_secret_access_key=FDR.aws_secret
@@ -229,12 +231,13 @@ def download_message_files(msg, s3ta, s3or, log: logging.Logger):
 
 def process_queue_message(msg, s3b, s3o, log_util: logging.Logger):
     """Process the message off of the queue and trigger the file download."""
-    log_util.debug("Processing message [%s]", msg.message_id)
+    log_util.info("Processing message [%s]", msg.message_id)
     # Grab the actual message body
     body = json.loads(msg.body)
+    log_util.info("Body: %s", body)
     # Download the file to our local file system and potentially upload it to S3
     metrics = download_message_files(body, s3b, s3o, log_util)
-    log_util.debug("Removing message [%s] from queue", msg.message_id)
+    log_util.info("Removing message [%s] from queue", msg.message_id)
     # Remove our message from the queue, if this is not performed in visibility_timeout seconds
     # this message will be restored to the queue for follow-up processing
     msg.delete()
