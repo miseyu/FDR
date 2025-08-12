@@ -133,6 +133,7 @@ def clean_exit(stat, signal, frame):  # pylint: disable=W0613
 def handle_file(path, key, file_object=None):
     """If configured, upload this file to our target bucket and remove it."""
     # If we've defined a target bucket
+    logger.info("FDR.target_bucket_name: %s", FDR.target_bucket_name)
     if FDR.target_bucket_name:
         if not file_object:
             # Open our local file (binary)
