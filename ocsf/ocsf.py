@@ -15,11 +15,11 @@ import yaml
 NEWLINE = ord('\n')
 
 CUSTOM_SOURCES = {
-    1001: 'CrowdStrike_FILE_ACTIVITY',
-    1005: 'CrowdStrike_MODULE_ACTIVITY',
-    1007: 'CrowdStrike_PROCESS_ACTIVITY',
-    4001: 'CrowdStrike_NETWORK_ACTIVITY',
-    4003: 'CrowdStrike_DNS_ACTIVITY'
+    1001: 'crs_FILE_ACTIVITY',
+    1005: 'crs_MODULE_ACTIVITY',
+    1007: 'crs_PROCESS_ACTIVITY',
+    4001: 'crs_NETWORK_ACTIVITY',
+    4003: 'crs_DNS_ACTIVITY'
 }
 
 BYTES_IN_MB = 1000000
@@ -48,7 +48,7 @@ def upload_parquet_files_to_s3(fdr, s3_target, log_utl: Logger):
                         with lock:
                             with open(upload_file_path, 'rb') as parquet_data:
                                 log_utl.info('@@@@uploaded_file@@@@=%s', upload_file_path)
-                                # s3_target.upload_fileobj(parquet_data, fdr.target_bucket_name, upload_file_path)
+                                s3_target.upload_fileobj(parquet_data, fdr.target_bucket_name, upload_file_path)
                             # Remove the file from the local file system
                             os.remove(upload_file_path)
 
