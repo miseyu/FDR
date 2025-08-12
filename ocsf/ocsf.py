@@ -47,8 +47,8 @@ def upload_parquet_files_to_s3(fdr, s3_target, log_utl: Logger):
                         lock = FileLock(upload_file_path + ".lock")
                         with lock:
                             with open(upload_file_path, 'rb') as parquet_data:
-                                log_utl.debug('@@@@uploaded_file@@@@=%s', upload_file_path)
-                                s3_target.upload_fileobj(parquet_data, fdr.target_bucket_name, upload_file_path)
+                                log_utl.info('@@@@uploaded_file@@@@=%s', upload_file_path)
+                                # s3_target.upload_fileobj(parquet_data, fdr.target_bucket_name, upload_file_path)
                             # Remove the file from the local file system
                             os.remove(upload_file_path)
 
