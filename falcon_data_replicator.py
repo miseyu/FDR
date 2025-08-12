@@ -105,6 +105,7 @@ def handle_file(path, key, target_bkt, file_object=None, log_util: logging.Logge
                 transform_time = time.time() - start_transform_time
                 # upload the file that meets the criteria
                 start_upload_time = time.time()
+                log_util.info("[no file_object, do_ocsf] Uploading file to path %s", key)
                 upload_parquet_files_to_s3(FDR, target_bkt, log_util)
                 upload_time = time.time() - start_upload_time
             else:
@@ -128,10 +129,12 @@ def handle_file(path, key, target_bkt, file_object=None, log_util: logging.Logge
                 transform_time = time.time() - start_transform_time
                 # upload the file that meets the criteria
                 start_upload_time = time.time()
+                log_util.info("[file_object, do_ocsf] Uploading file to path %s", key)
                 upload_parquet_files_to_s3(FDR, target_bkt, log_util)
                 upload_time = time.time() - start_upload_time
             else:
                 start_upload_time = time.time()
+                log_util.info("[file_object, not do_ocsf] Uploading file to path %s", key)
                 target_bkt.upload_fileobj(file_object, FDR.target_bucket_name, key)
                 log_util.info("Uploaded file to path %s", key)
                 upload_time = time.time() - start_upload_time

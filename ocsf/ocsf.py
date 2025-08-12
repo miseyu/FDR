@@ -87,13 +87,13 @@ def write_to_parquet_file(fdr, ocsf_events, filename_class_uid_key, log_utl: Log
                     lock = FileLock(parquet_file_name + ".lock")
                     with lock:
                         events_wrote_to_file = True
-                        log_utl.debug('!!!!!!!!!!Update to bucket=%s, record_len=%s, file_name=%s',
+                        log_utl.info('!!!!!!!!!!Update to bucket=%s, record_len=%s, file_name=%s',
                                       filename_class_uid_key,
                                       len(ocsf_events), parquet_file_name)
                         existing_data = pd.read_parquet(parquet_file_name)
                         existing_data.sort_index(axis=1, inplace=True)
                         concat_data = pd.concat([existing_data, data], axis=0)
-                        concat_data.to_parquet(parquet_file_name, compression='gzip', index=False)
+                        concat_data.to_parquet(parquet_file_name, index=False)
         if not events_wrote_to_file:
             parquet_file_name = filename_class_uid_key + '_chunk_' + str(
                 int(datetime.utcnow().timestamp())) + '.parquet'
@@ -101,7 +101,7 @@ def write_to_parquet_file(fdr, ocsf_events, filename_class_uid_key, log_utl: Log
             with lock:
                 log_utl.debug('#########Write to bucket=%s, record_len=%s, file_name=%s', filename_class_uid_key,
                               len(ocsf_events), parquet_file_name)
-                data.to_parquet(parquet_file_name, compression='gzip', index=False)
+                data.to_parquet(parquet_file_name, index=False)
 
 
 def read_fdr_part(rdr):
